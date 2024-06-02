@@ -2,30 +2,24 @@ package authz
 
 default allow = false
 
+user_prevs = ["/user", "/general"]
+
+accountant_prevs = ["/accountant", "/general"]
+
+admin_prevs = ["/user", "/general", "/accountant", "/admin"]
+
 allow {
-    input.path == "/general"
+    input.user.role == "admin"
+    admin_prevs[_] == input.user.path
 }
 
 allow {
-    input.role == "admin"
+    input.user.role == "user"
+    user_prevs[_] == input.user.path
 }
 
 allow {
-    input.role == "user"
-    input.path == "/user"
+    input.user.role == "accountant"
+    accountant_prevs[_] == input.user.path
 }
 
-allow {
-    input.role == "user"
-    input.path == "/general"
-}
-
-allow {
-    input.role == "accountant"
-    input.path == "/accountant"
-}
-
-allow {
-    input.role == "accountant"
-    input.path == "/general"
-}

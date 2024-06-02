@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import java.util.List;
 
 @Entity
-@Table(name = "pages")
+@Table(name = "page")
 public class Page {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

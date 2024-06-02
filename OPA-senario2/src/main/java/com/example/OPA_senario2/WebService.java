@@ -14,6 +14,8 @@ public class WebService {
 
     private final UserService userService;
     private final OpaService opaService;
+    
+    private User currentUser;
 
     public WebService(UserService userService, OpaService opaService) {
         this.userService = userService;
@@ -27,51 +29,71 @@ public class WebService {
         return "unauthorized";
     }
 
+    @GetMapping("/login")
+    public String login(@RequestParam("email") String email) {
+        currentUser = userService.login(email);
+        return "login";
+    }
+    
     @GetMapping("/general")
-    public String getGeneralPage(@RequestParam("id") int id, Model model) {
-        User user = userService.findUserByID(id);
-        if(!opaService.isAllowed(user.getRole(), "/general")) {
-            return unauthorizedResponse(model, user);
+    public String getGeneralPage(Model model) {
+        if(currentUser==null) {
+            return "loginFirst";
         }
-        String message = "Hello in general page, " + user.getUsername();
+
+        if(!opaService.isAllowed(currentUser.getRole(), "/general")) {
+            return unauthorizedResponse(model, currentUser);
+        }
+        String message = "Hello in general page, " + currentUser.getUsername();
         model.addAttribute("message", message);
-        model.addAttribute("privileges", user.getPrivileges().toArray());
+        model.addAttribute("privileges", currentUser.getPrivileges().toArray());
         return "general";
     }
 
     @GetMapping("/admin")
-    public String getAdminPage(@RequestParam("id") int id, Model model) {
-        User user = userService.findUserByID(id);
-        if(!opaService.isAllowed(user.getRole(), "/admin")) {
-            return unauthorizedResponse(model, user);
+    public String getAdminPage(Model model) {
+        if(currentUser==null) {
+            return "loginFirst";
         }
-        String message = "Hello in admin page, "+user.getUsername();
+
+        if(!opaService.isAllowed(currentUser.getRole(), "/admin")) {
+            return unauthorizedResponse(model, currentUser);
+        }
+        String message = "Hello in admin page, "+currentUser.getUsername();
         model.addAttribute("message",message);
-        model.addAttribute("privileges", user.getPrivileges());
+        model.addAttribute("privileges", currentUser.getPrivileges());
         return "admin";
     }
 
     @GetMapping("/user")
-    public String getUserPage(@RequestParam("id") int id, Model model) {
-        User user = userService.findUserByID(id);
-        if(!opaService.isAllowed(user.getRole(), "/user")) {
-            return unauthorizedResponse(model, user);
+    public String getUserPage(Model model) {
+        if(currentUser==null) {
+            return "loginFirst";
         }
-        String message = "Hello in user page, "+user.getUsername();
+
+        if(!opaService.isAllowed(currentUser.getRole(), "/user")) {
+            return unauthorizedResponse(model, currentUser);
+        }
+        String message = "Hello in user page, "+currentUser.getUsername();
         model.addAttribute("message",message);
-        model.addAttribute("privileges", user.getPrivileges());
+        model.addAttribute("privileges", currentUser.getPrivileges());
         return "user";
     }
 
     @GetMapping("/accountant")
-    public String getAccountantPage(@RequestParam("id") int id, Model model) {
-        User user = userService.findUserByID(id);
-        if(!opaService.isAllowed(user.getRole(), "/accountant")) {
-            return unauthorizedResponse(model, user);
+    public String getAccountantPage(Model model) {
+        if(currentUser==null) {
+            return "loginFirst";
         }
-        String message = "Hello in accountant page, "+user.getUsername();
+
+        if(!opaService.isAllowed(currentUser.getRole(), "/accountant")) {
+            return unauthorizedResponse(model, currentUser);
+        }
+        String message = "Hello in accountant page, "+currentUser.getUsername();
         model.addAttribute("message",message);
-        model.addAttribute("privileges", user.getPrivileges());
+        model.addAttribute("privileges", currentUser.getPrivileges());
         return "accountant";
     }
+
+
 }

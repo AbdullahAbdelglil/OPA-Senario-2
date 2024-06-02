@@ -5,15 +5,16 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table(name = "users")
+@Table(name = "user")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String username;
+    private String email;
     private String role;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "priviliges",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -46,5 +47,13 @@ public class User {
 
     public Set<Page> getPrivileges() {
         return privileges;
+    }
+
+    public String getUserEmail() {
+        return email;
+    }
+
+    public void setUserEmail(String email) {
+        this.email = email;
     }
 }
