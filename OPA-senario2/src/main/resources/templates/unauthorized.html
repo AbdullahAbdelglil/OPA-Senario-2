@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Unauthorized Page</title>
+</head>
+<body>
+<h2 th:text="${message}"></h2>
+
+<h3>You can access only these pages:</h3>
+<ul>
+  <li th:each="page : ${privileges}" th:text="${page}"></li>
+</ul>
+</body>
+</html>
